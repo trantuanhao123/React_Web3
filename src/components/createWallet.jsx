@@ -29,7 +29,7 @@ export default function CreateWallet() {
 
       // Gửi dữ liệu lên MongoDB
       const response = await axios.post(
-        "http://localhost:8080/v1/api/createwallet",
+        "https://nodejs-web3.onrender.com/v1/api/createwallet",
         walletData
       );
 

@@ -13,7 +13,7 @@ const PredictionsList = () => {
     useEffect(() => {
         const fetchPredictions = async () => {
             try {
-                const response = await axios.get("http://localhost:8080/v1/api/winner");
+                const response = await axios.get("https://nodejs-web3.onrender.com/v1/api/winner");
                 console.log("Dữ liệu trả về từ API:", response.data);
                 
                 if (response.data.message === "Không có người chiến thắng hôm qua") {

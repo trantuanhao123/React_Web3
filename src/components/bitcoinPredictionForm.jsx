@@ -50,7 +50,7 @@ export default function BitcoinPredictionForm() {
     console.log("Dữ liệu gửi đi:", predictionData);
 
     try {
-      const response = await axios.post("http://localhost:8080/v1/api/createprediction", predictionData);
+      const response = await axios.post("https://nodejs-web3.onrender.com/v1/api/createprediction", predictionData);
       setMessage("Dự đoán đã được lưu thành công, nếu tài khoản của bạn đã dự đoán sẽ được cập nhật với dữ liệu mới nhất");
       alert("Dữ liệu đã được lưu vào cơ sở dữ liệu!");
     } catch (error) {

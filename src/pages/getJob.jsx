@@ -21,7 +21,7 @@ const JobList = () => {
 
     const fetchJobs = async () => {
       try {
-        const response = await axios.get("http://localhost:8080/v1/api/getjob");
+        const response = await axios.get("https://nodejs-web3.onrender.com/v1/api/getjob");
         if (response.data.success) {
           setJobs(response.data.data);
         } else {
@@ -55,7 +55,7 @@ const JobList = () => {
     console.log("Dữ liệu gửi đi:", dataToSend);
 
     try {
-        const response = await axios.post("http://localhost:8080/v1/api/createwinner", dataToSend);
+        const response = await axios.post("https://nodejs-web3.onrender.com/v1/api/createwinner", dataToSend);
 
         console.log("Phản hồi từ server:", response.data);
 
