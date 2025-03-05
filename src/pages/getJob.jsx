@@ -7,6 +7,7 @@ const JobList = () => {
   const [error, setError] = useState(null);
   const [selectedJob, setSelectedJob] = useState(null);
   const [answer, setAnswer] = useState("");
+  const [errorMessage, setErrorMessage] = useState("");
   const [winner, setWinner] = useState(null);
 
   useEffect(() => {
@@ -40,39 +41,39 @@ const JobList = () => {
   const handleApply = (job) => {
     setSelectedJob(job);
     setAnswer("");
+    setErrorMessage("");
   };
 
   const handleSubmitAnswer = async () => {
     if (!selectedJob || !winner) return;
-
-    const dataToSend = {
-        jobTitle: selectedJob.title,
-        userAnswer: answer,
-        bank: winner.bank,   // Trích xuất trực tiếp từ sessionInfo
-        wallet: winner.wallet // Trích xuất trực tiếp từ sessionInfo
-    };
-
-    console.log("Dữ liệu gửi đi:", dataToSend);
-
-    try {
-        const response = await axios.post("https://nodejs-web3.onrender.com/v1/api/createwinner", dataToSend);
-
-        console.log("Phản hồi từ server:", response.data);
-
-        if (response.data.success) {
-            alert(`Ứng tuyển thành công cho công việc: ${selectedJob.title}`);
-        } else {
-            alert("Có lỗi xảy ra, vui lòng thử lại!");
-        }
-    } catch (err) {
-        console.error("Lỗi khi gửi dữ liệu:", err.message);
-        alert(`Lỗi: ${err.message}`);
+  
+    const userAnswer = answer.trim().toLowerCase().replace(/\.$/, ""); 
+    const correctAnswer = selectedJob.correctAnswer.trim().toLowerCase().replace(/\.$/, "");
+  
+    if (userAnswer !== correctAnswer) {
+      setErrorMessage("Câu trả lời chưa chính xác. Vui lòng thử lại!");
+      return;
     }
-
-    setSelectedJob(null);
-};
-
-
+  
+    const dataToSend = {
+      jobTitle: selectedJob.title,
+      userAnswer: answer,
+      maNguoiChoi: winner.maNguoiChoi,
+      diaChiVi: winner.diaChiVi,
+    };
+  
+    try {
+      const response = await axios.post("https://nodejs-web3.onrender.com/v1/api/createwinner", dataToSend);
+      if (response.data.success) {
+        alert(`Ứng tuyển thành công cho công việc: ${selectedJob.title}`);
+        setSelectedJob(null);
+      } else {
+        alert("Có lỗi xảy ra, vui lòng thử lại!");
+      }
+    } catch (err) {
+      alert(`Lỗi: ${err.response?.data?.message || err.message}`);
+    }
+  };
 
   if (loading) return <p>Đang tải dữ liệu...</p>;
   if (!winner) return <p style={{ color: "gray", fontStyle: "italic" }}>Bạn không chiến thắng</p>;
@@ -81,6 +82,7 @@ const JobList = () => {
   return (
     <div>
       <h2>Danh sách công việc</h2>
+      <h3>Lưu ý: Bạn chỉ có thể ứng tuyển một lần, việc lặp lại sẽ cập nhật đơn ứng tuyển của bạn</h3>
       <table border="1">
         <thead>
           <tr>
@@ -112,6 +114,7 @@ const JobList = () => {
               onChange={(e) => setAnswer(e.target.value)}
               placeholder="Nhập câu trả lời của bạn..."
             />
+            {errorMessage && <p style={{ color: "red" }}>{errorMessage}</p>}
             <div className="modal-actions">
               <button onClick={handleSubmitAnswer}>Gửi</button>
               <button onClick={() => setSelectedJob(null)}>Hủy</button>

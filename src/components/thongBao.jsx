@@ -6,27 +6,22 @@ const PredictionsList = () => {
     const [predictions, setPredictions] = useState([]);
     const [error, setError] = useState(null);
     const [selectedPlayer, setSelectedPlayer] = useState(null);
-    const [walletInput, setWalletInput] = useState("");
-    const [noWinnerMessage, setNoWinnerMessage] = useState(""); // Trạng thái để lưu thông báo không có người thắng
+    const [diaChiViInput, setDiaChiViInput] = useState("");
+    const [noWinnerMessage, setNoWinnerMessage] = useState("");
     const navigate = useNavigate();
 
     useEffect(() => {
         const fetchPredictions = async () => {
             try {
-                const response = await axios.get("https://nodejs-web3.onrender.com/v1/api/winner");
+                const response = await axios.get("https://nodejs-web3.onrender.com/v1/api/getwinner");
                 console.log("Dữ liệu trả về từ API:", response.data);
-                
-                if (response.data.message === "Không có người chiến thắng hôm qua") {
+
+                if (!response.data.success || !Array.isArray(response.data.data) || response.data.data.length === 0) {
                     setNoWinnerMessage("Không có người chiến thắng hôm qua.");
-                    setPredictions([]); // Đảm bảo không hiển thị danh sách trống
+                    setPredictions([]);
                     return;
                 }
-
-                const data = response.data.data;
-                if (!Array.isArray(data)) {
-                    throw new Error("Dữ liệu không phải là mảng!");
-                }
-                setPredictions(data);
+                setPredictions(response.data.data);
             } catch (err) {
                 console.error("Lỗi khi lấy dữ liệu:", err);
                 setError("Không thể tải dữ liệu. Vui lòng thử lại sau.");
@@ -35,18 +30,18 @@ const PredictionsList = () => {
         fetchPredictions();
     }, []);
 
-    const handleConnectWallet = (player) => {
+    const handleConnectPlayer = (player) => {
         setSelectedPlayer(player);
-        setWalletInput("");
+        setDiaChiViInput("");
     };
 
     const handleSubmit = (e) => {
         e.preventDefault();
-        if (walletInput === selectedPlayer.wallet) {
+        if (selectedPlayer && diaChiViInput === selectedPlayer.diaChiVi) {
             sessionStorage.setItem("connectedPlayer", JSON.stringify(selectedPlayer));
             navigate("/getjobs");
         } else {
-            alert("Wallet không chính xác. Vui lòng thử lại.");
+            alert("Địa chỉ ví không chính xác. Vui lòng thử lại.");
         }
     };
 
@@ -56,7 +51,7 @@ const PredictionsList = () => {
 
     return (
         <div>
-            <h2>Danh sách người chiến thắng hôm qua</h2>
+            <h2>Danh sách người chiến thắng hôm nay</h2>
             {noWinnerMessage ? (
                 <p style={{ color: "gray", fontStyle: "italic" }}>{noWinnerMessage}</p>
             ) : predictions.length === 0 ? (
@@ -64,13 +59,13 @@ const PredictionsList = () => {
             ) : (
                 <ul>
                     {predictions.map((pred) => (
-                        <li key={pred.id || Math.random()}>
-                            <strong>Người chơi: </strong> {pred.bank}
+                        <li key={pred.maNguoiChoi}>
+                            <strong>Mã người chơi: </strong> ***{pred.maNguoiChoi.slice(-4)}
                             <button
                                 style={{ marginLeft: "10px" }}
-                                onClick={() => handleConnectWallet(pred)}
+                                onClick={() => handleConnectPlayer(pred)}
                             >
-                                Kết nối ví
+                                Kết nối
                             </button>
                         </li>
                     ))}
@@ -78,14 +73,14 @@ const PredictionsList = () => {
             )}
             {selectedPlayer && (
                 <div style={{ marginTop: "20px", border: "1px solid #ccc", padding: "10px" }}>
-                    <h3>Kết nối ví cho: {selectedPlayer.bank}</h3>
+                    <h3>Kết nối với mã người chơi: ***{selectedPlayer.maNguoiChoi.slice(-4)}</h3>
                     <form onSubmit={handleSubmit}>
                         <label>
-                            Nhập wallet:
+                            Nhập địa chỉ ví đầy đủ:
                             <input
                                 type="text"
-                                value={walletInput}
-                                onChange={(e) => setWalletInput(e.target.value)}
+                                value={diaChiViInput}
+                                onChange={(e) => setDiaChiViInput(e.target.value)}
                                 style={{ marginLeft: "10px" }}
                             />
                         </label>
