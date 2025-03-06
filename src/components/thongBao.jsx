@@ -17,7 +17,7 @@ const PredictionsList = () => {
                 console.log("Dữ liệu trả về từ API:", response.data);
 
                 if (!response.data.success || !Array.isArray(response.data.data) || response.data.data.length === 0) {
-                    setNoWinnerMessage("Không có người chiến thắng hôm qua.");
+                    setNoWinnerMessage("Không có người chiến thắng hôm nay.");
                     setPredictions([]);
                     return;
                 }
