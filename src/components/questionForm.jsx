@@ -60,6 +60,7 @@ function QuestionForm() {
 
   return (
     <div className={styles.questionContainer}>
+      <h2>Kiểm tra kiến thức</h2>
       <h2>Danh sách câu hỏi</h2>
       {questions.length > 0 ? (
         <form onSubmit={handleSubmit} className={styles.questionList}>
