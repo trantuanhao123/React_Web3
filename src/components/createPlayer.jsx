@@ -40,7 +40,7 @@ export default function CreatePlayer() {
   return (
     <div className="w-96 p-4 bg-gray-800 shadow-lg rounded-lg">
       <div className="flex flex-col items-center gap-3">
-        <h2 className="text-xl font-semibold text-white">Tạo tài khoản tham gia game</h2>
+        <h2 className="text-xl font-semibold text-white">Khai báo thông tin</h2>
         <p className="text-white">Lưu ý: Bạn không cần nhập thông tin cá nhân</p>
         <p className="text-white">Lưu ý: Đảm bảo bạn ghi chú lại địa chỉ ví của mình</p>
         <input
