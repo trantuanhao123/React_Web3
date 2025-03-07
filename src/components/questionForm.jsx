@@ -59,6 +59,7 @@ function QuestionForm() {
 
   return (
     <div className={styles.questionContainer}>
+      <h2>Kiểm tra kiến thức</h2>
       <h2>Danh sách câu hỏi</h2>
       <p>Lưu ý: Bạn hãy đợi ít phút để đợi phản hồi về kết quả của chúng tôi, nếu bạn vượt qua bạn sẽ được xuất hiện trong danh sách người chiến thắng</p>
       {questions.length > 0 ? (
