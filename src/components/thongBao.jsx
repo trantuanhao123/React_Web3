@@ -51,7 +51,7 @@ const PredictionsList = () => {
 
     return (
         <div>
-            <h2>Danh sách người chiến thắng hôm nay</h2>
+            <h2>Danh sách người chiến thắng</h2>
             {noWinnerMessage ? (
                 <p style={{ color: "gray", fontStyle: "italic" }}>{noWinnerMessage}</p>
             ) : predictions.length === 0 ? (
