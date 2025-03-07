@@ -1,5 +1,4 @@
 import React, { useState, useEffect } from "react";
-import { useNavigate } from "react-router-dom";
 import axios from "axios";
 import styles from "../css/QuestionForm.module.css";
 
@@ -11,7 +10,7 @@ function QuestionForm() {
   const [message, setMessage] = useState("");
   useEffect(() => {
     axios
-      .get("https://nodejs-web3.onrender.com/v1/api/getquestion")
+      .get("https://nodejs-web3.onrender.com/v1/api/generateQuestion")
       .then((response) => {
         if (response.data.success) {
           setQuestions(response.data.data);
@@ -41,10 +40,10 @@ function QuestionForm() {
       questions: questions.map((q) => q.cauHoi),
       answers: Object.values(answers),
     };
-
+    console.log("Dữ liệu gửi đi:", data);
     console.log(data);
     axios
-      .post("https://nodejs-web3.onrender.com/v1/api/createanswerform", data)
+      .post("https://nodejs-web3.onrender.com/v1/api/kiemtra", data)
       .then((response) => {
         if (response.data.success || response.data.isTrue) {
           setMessage("Gửi câu trả lời thành công! Hãy đợi giây lát để kiểm tra.");
@@ -54,13 +53,14 @@ function QuestionForm() {
       })
       .catch((error) => {
         console.error("Lỗi khi gửi câu trả lời:", error);
-        setMessage("Bạn hãy kiểm tra xem tên người chơi đã được tạo chưa!");
+        setMessage("Bạn hãy kiểm tra xem tên người chơi đã được tạo chưa hoặc là bạn đã submit form rồi!");
       });
   };
 
   return (
     <div className={styles.questionContainer}>
       <h2>Danh sách câu hỏi</h2>
+      <p>Lưu ý: Bạn hãy đợi ít phút để đợi phản hồi về kết quả của chúng tôi, nếu bạn vượt qua bạn sẽ được xuất hiện trong danh sách người chiến thắng</p>
       {questions.length > 0 ? (
         <form onSubmit={handleSubmit} className={styles.questionList}>
           <div className={styles.playerName}>
